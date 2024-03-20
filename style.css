@@ -107,5 +107,13 @@ html {
   text-align: center; /* Assegura que o conteúdo interno esteja centralizado */
   z-index: 10; /* Assegura que o logotipo fique acima dos outros elementos se necessário */
 }
+#app {
+  transform: rotate(-90deg) translate(-100%);
+  transform-origin: top left;
+  width: 100vh;
+  height: 100vw;
+  overflow-x: hidden;
+}
+
 
 /* Estilize adicionalmente como preferir */
