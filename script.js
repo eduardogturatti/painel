@@ -13,14 +13,12 @@ async function carregarDadosCSV() {
 }
 
 function processarCSV(dadosCSV) {
-  const linhas = dadosCSV.split("\n").slice(1); // Remove cabeçalho
+  const linhas = dadosCSV.split("\n").slice(1);
   const slides = {};
 
   linhas.forEach((linha) => {
     const [slideId, categoria, item, preco] = linha.split(",");
-    if (!slides[slideId]) {
-      slides[slideId] = [];
-    }
+    if (!slides[slideId]) slides[slideId] = [];
     slides[slideId].push({
       categoria: categoria.trim(),
       item: item.trim(),
@@ -37,18 +35,12 @@ function formatarPreco(preco) {
 
 function criarSlides(slides) {
   const slider = document.getElementById("slider");
-  slider.innerHTML = ""; // Limpar slides existentes
+  slider.innerHTML = "";
 
-  Object.entries(slides).forEach(([slideId, itens], slideIndex) => {
+  Object.entries(slides).forEach(([slideId, itens]) => {
     const slide = document.createElement("div");
     slide.className = "slide";
-    if (slideIndex === 0) {
-      // Apenas o primeiro slide é ativo inicialmente
-      slide.classList.add("active");
-    }
-
     let ultimaCategoria = "";
-    let itemDelay = 0; // Inicializa o atraso de animação
 
     itens.forEach(({ categoria, item, preco }, index) => {
       if (categoria !== ultimaCategoria) {
@@ -57,22 +49,18 @@ function criarSlides(slides) {
         categoriaDiv.innerHTML = categoria;
         slide.appendChild(categoriaDiv);
         ultimaCategoria = categoria;
-        itemDelay = 0.1; // Reinicia o atraso para a primeira item-preco de uma nova categoria
       }
       const itemPrecoDiv = document.createElement("div");
       itemPrecoDiv.className = "item-preco";
-      itemPrecoDiv.style.animationDelay = `${itemDelay}s`; // Define o atraso da animação
-      itemPrecoDiv.innerHTML = `
-                <span class="item">${item}</span>
-                <span class="preco">${preco}</span>
-            `;
+      itemPrecoDiv.innerHTML = `<span class="item">${item}</span><span class="preco">${preco}</span>`;
       slide.appendChild(itemPrecoDiv);
-
-      itemDelay += 0.1; // Incrementa o atraso para o próximo item-preco
     });
 
     slider.appendChild(slide);
   });
+
+  // Inicialmente, ativa o primeiro slide
+  if (slider.firstChild) slider.firstChild.classList.add("active");
 }
 
 function iniciarCicloDeSlides() {
@@ -80,40 +68,39 @@ function iniciarCicloDeSlides() {
   const slides = document.querySelectorAll(".slide");
   const totalSlides = slides.length;
 
-  function clearAnimation() {
-    document.querySelectorAll(".slide").forEach((slide) => {
-      slide.classList.remove("fade-out");
+  function animateSlide(slide) {
+    const elements = slide.querySelectorAll(".categoria, .item-preco");
+    let delay = 0; // Delay inicial para a animação
+
+    elements.forEach((el) => {
+      // Remove a classe 'animate' para garantir que a animação seja reiniciada
+      el.classList.remove("animate");
+      // Força reflow para reiniciar a animação
+      void el.offsetWidth;
+    });
+
+    // Agora, adiciona a classe 'animate' com o delay apropriado
+    elements.forEach((el) => {
+      if (el.classList.contains("categoria")) {
+        setTimeout(() => el.classList.add("animate"), delay);
+        delay += 100; // Incrementa o delay para a próxima animação
+      } else {
+        // Assegura que itens tenham um delay adicional para sincronizar com a animação das categorias
+        setTimeout(() => el.classList.add("animate"), delay);
+        delay += 100; // Incrementa o delay para a próxima animação
+      }
     });
   }
 
-  function animateCurrentSlide() {
-    // Limpa as animações e prepara o próximo slide
-    clearAnimation();
-    const activeSlide = slides[currentSlideIndex];
-    const allElements = activeSlide.querySelectorAll(".categoria, .item-preco");
-    allElements.forEach((el, index) => {
-      setTimeout(() => {
-        el.classList.add("animate");
-      }, index * 50); // Incrementa o delay para cada categoria e item
-    });
-  }
-
-  // Animação inicial do primeiro slide
-  animateCurrentSlide();
+  animateSlide(slides[currentSlideIndex]);
 
   setInterval(() => {
-    const currentSlide = slides[currentSlideIndex];
-    currentSlide.classList.add("fade-out");
-
-    setTimeout(() => {
-      currentSlide.classList.remove("active", "animate");
-      currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
-      slides[currentSlideIndex].classList.add("active");
-
-      // Reinicia as animações para o slide ativo após o fade out
-      animateCurrentSlide();
-    }, 500); // Espera o fade out completar (1s) antes de mudar o slide
-  }, 20000); // Alternar slides a cada 20 segundos
+    slides[currentSlideIndex].classList.remove("active");
+    currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+    const nextSlide = slides[currentSlideIndex];
+    nextSlide.classList.add("active");
+    animateSlide(nextSlide);
+  }, 10000); // Ajuste conforme necessário
 }
 
 document.addEventListener("DOMContentLoaded", carregarDadosCSV);

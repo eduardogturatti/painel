@@ -6,7 +6,7 @@ html {
   height: 1920px;
   background: #9e0000;
   font-family: "filson-pro", sans-serif;
-  font-weight: 700;
+  font-weight: 700, 900;
   font-style: normal;
 }
 
@@ -15,7 +15,7 @@ html {
   width: 100%;
   height: 100%;
   opacity: 0;
-  transition: opacity 1s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
   color: #ffffff;
 }
 
@@ -24,9 +24,20 @@ html {
 }
 
 .categoria {
-  font-size: 96px;
-  font-weight: 700;
+  font-size: 120px;
+  font-weight: 900;
   margin: 50px 30px;
+  opacity: 0;
+  background: linear-gradient(
+    90deg,
+    #ae8625,
+    #e0aa36,
+    #b88a44
+  ); /* Exemplo de gradiente dourado */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent; /* Torna o texto transparente, mostrando o gradiente */
+  display: inline-block; /* Necessário para que o background-clip funcione */
 }
 
 .item {
@@ -43,11 +54,16 @@ html {
 }
 .item,
 .preco {
-  line-height: 1.4; /* Ajuste o valor conforme necessário */
+  line-height: 1.6; /* Ajuste o valor conforme necessário */
 }
 .item-preco {
   opacity: 0;
   transform: translateY(20px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 0 10px; /* Ajuste conforme necessário */
 }
 .item-preco.animate {
   animation: fadeInUp 0.3s ease forwards;
@@ -72,6 +88,24 @@ html {
 
 .categoria.animate {
   animation: fadeInLeft 0.5s ease forwards;
+}
+
+.selo-qualidade {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 25%; /* O selo ocupa 25% da largura do elemento pai */
+  z-index: 10; /* Assegura que o selo fique acima dos outros elementos se necessário */
+}
+
+.footer-logotipo {
+  position: absolute;
+  bottom: 0;
+  left: 50%; /* Centraliza o logotipo */
+  transform: translateX(-50%); /* Ajuste fino para centralização exata */
+  width: 100%; /* O logotipo se estende por toda a largura */
+  text-align: center; /* Assegura que o conteúdo interno esteja centralizado */
+  z-index: 10; /* Assegura que o logotipo fique acima dos outros elementos se necessário */
 }
 
 /* Estilize adicionalmente como preferir */
