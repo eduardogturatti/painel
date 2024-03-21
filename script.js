@@ -114,5 +114,5 @@ function autoRefresh() {
 
 // Configura a atualização automática com base no intervalo definido
 setTimeout(autoRefresh, refreshInterval);
-} 
+
 document.addEventListener("DOMContentLoaded", carregarDadosCSV);
