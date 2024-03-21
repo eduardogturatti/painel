@@ -102,5 +102,17 @@ function iniciarCicloDeSlides() {
     animateSlide(nextSlide);
   }, 10000); // Ajuste conforme necessário
 }
+// Define um intervalo para a atualização automática da página (em milissegundos)
+// Exemplo: 60000 milissegundos = 1 minuto
+var refreshInterval = 240000; 
 
+// Define a função de atualização
+function autoRefresh() {
+    // Recarrega a página
+    window.location.reload();
+}
+
+// Configura a atualização automática com base no intervalo definido
+setTimeout(autoRefresh, refreshInterval);
+} 
 document.addEventListener("DOMContentLoaded", carregarDadosCSV);
